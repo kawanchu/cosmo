@@ -22,11 +22,7 @@ if (!proxyPort) {
 }
 
 const server = http.createServer(function (req, res) {
-  if (Math.random() < 0.5) {
-    res.write('oops!');
-    res.end();
-    return;
-  }
+  // TODO: check claim
 
   const options = {
     hostname: proxyHost,
