@@ -1,11 +1,32 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
-import { db } from '../cosmo-client'
+import { Client } from '../cosmo-client'
+import { client } from 'ontology-dapi';
 
 const uuidv4 = require('uuid/v4');
 
+const sessionTokenKey = 'sessionToken';
+
+function getSessionToken() {
+  return window.localStorage.getItem(sessionTokenKey);
+}
+
 const createStore = () => {
+  const [db, initDB, revokeDB] = (() => {
+    let _db = null;
+    const db = () => _db;
+    const initDB = (sessionToken) => {
+      _db = new Client('127.0.0.1', 21982, { sessionToken })
+    };
+    const revokeDB = () => {
+      _db = null;
+    }
+    return [ db, initDB, revokeDB ];
+  })();
+
+  client.registerClient({});
+
   return new Vuex.Store({
     state: {
       postForm: {
@@ -23,12 +44,7 @@ const createStore = () => {
         return state.auth.status === 'signin'
       },
       authUser(state) {
-        const profile = state.auth.person._profile
-        return {
-          name: profile.name || 'noname',
-          imageUrl: profile.image && profile.image[0] && profile.image[0].contentUrl || 'https://gaia.blockstack.org/hub/1KLzSLktx8xV35pR4z5maCBWQiVjG3sUef//avatar-0?0.7366012623625917',
-          description: profile.description || 'no description',
-        }
+        return state.auth.person;
       },
       findPost: (state) => (id) => {
         return state.posts.find(post => post.id === id)
@@ -70,30 +86,35 @@ const createStore = () => {
     },
     actions: {
       init({ commit, dispatch }) {
-        if (blockstack.isUserSignedIn()) {
-          const userData = blockstack.loadUserData()
-          const person = new blockstack.Person(userData.profile)
+        const sessionToken = getSessionToken();
+        if (sessionToken) {
+          // TODO: use actual user data
+          const person = {
+            name: 'noname',
+            imageUrl: 'https://gaia.blockstack.org/hub/1KLzSLktx8xV35pR4z5maCBWQiVjG3sUef//avatar-0?0.7366012623625917',
+            description: 'no description',
+          }
+          initDB(sessionToken);
           commit('setAuthPerson', person)
           commit('setAuthStatus', 'signin')
           dispatch('loadPosts')
-        } else if (blockstack.isSignInPending()) {
-          commit('setAuthStatus', 'pending')
-          blockstack.handlePendingSignIn().then(userdata => {
-            window.location = window.location.origin
-          })
         }
       },
-      signIn({ commit }) {
-        const redirectURI = `${window.location.origin}`
-        const manifestURI = `${window.location.origin}/static/manifest.json`
-        const scope = ['store_write']
-        blockstack.redirectToSignIn(redirectURI, manifestURI, scope)
+      async signIn({ commit }) {
+        const account = await client.api.asset.getAccount();
+        console.log('account', account);
+        const sig = await client.api.message.signMessage({ message: account });
+        console.log(sig);
+
+        const sessionToken = `${account}:${sig.publicKey}:${sig.data}`;
+        window.localStorage.setItem(sessionTokenKey, sessionToken);
       },
       signOut({ commit }) {
-        blockstack.signUserOut(window.location.href)
+        revokeDB();
+        window.localStorage.removeItem(sessionTokenKey);
       },
       async loadPosts({ commit }) {
-        const posts = await db.collection('posts').get()
+        const posts = await db().collection('posts').get()
         commit('setPosts', posts)
       },
       async createPost({ commit, dispatch }) {
@@ -104,20 +125,20 @@ const createStore = () => {
           createdAt: d.toISOString(),
           updatedAt: d.toISOString(),
         }
-        const post = await db.collection('posts').add(params)
+        const post = await db().collection('posts').add(params)
         commit('addPost', post)
         return post
       },
       deletePost({ commit, dispatch }, { post }) {
         commit('deletePost', post)
-        db.collection('posts').doc(post.id).delete()
+        db().collection('posts').doc(post.id).delete()
       },
       updatePost({ commit, dispatch }, post) {
         const d = new Date()
         post.createdAt = d.toISOString()
 
         commit('updatePost', post)
-        db.collection('posts').doc(post.id).set(post)
+        db().collection('posts').doc(post.id).set(post)
       }
     }
   })

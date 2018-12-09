@@ -59,13 +59,13 @@ body {
             <h1 class='title'>Monolith</h1>
             <div class="right-menu">
               <img class='avatar' :src='$store.getters.authUser.imageUrl' alt="avatar" :width='40' :height='40'>
-              <a class='signout' href="#" @click="$store.dispatch('signOut')">sign out</a>
+              <a class='signout' href="#" @click="signOut()">sign out</a>
             </div>
           </div>
           <div class="header-guest" v-else>
             <h1 class='title'>Monolith</h1>
             <div class="right-menu">
-              <el-button type='primary' @click="$store.dispatch('signIn')">ログイン</el-button>
+              <el-button type='primary' @click="signIn()">ログイン</el-button>
             </div>
           </div>
         </div>
@@ -82,5 +82,15 @@ export default {
   name: 'App',
   mounted () {
   },
+  methods: {
+    async signIn() {
+      await this.$store.dispatch('signIn');
+      window.location.reload();
+    },
+    async signOut() {
+      await this.$store.dispatch('signOut');
+      window.location.reload();
+    },
+  }
 }
 </script>

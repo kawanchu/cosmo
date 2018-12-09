@@ -28,7 +28,7 @@ if (!claimIssuer || !ontApiOrigin) {
 }
 
 async function hasPermission(req, iss) {
-  const sub = req.headers['ontology-subject'];
+  const sub = req.headers['session-token'];
   const issuer = `did:ont:${iss}`;
   const subject = `did:ont:${sub}`;
   const signature = null;
@@ -54,7 +54,7 @@ const server = http.createServer(async function (req, res) {
   if (req.method && req.method === 'OPTIONS') {
     res.writeHead(200, {
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Ontology-Subject",
+      "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Session-Token",
       "Access-Control-Allow-Methods": "GET,POST,HEAD,OPTIONS,PUT,DELETE",
     });
     res.end();
@@ -62,7 +62,7 @@ const server = http.createServer(async function (req, res) {
   }
 
   if (claimIssuer) {
-    console.log(req.headers['ontology-subject']);
+    console.log(req.headers['session-token']);
     if (!(await hasPermission(req, claimIssuer))) {
       const body = JSON.stringify({ error: 'authentication failed' });
       res.writeHead(403, { 'Content-Length': body.length });

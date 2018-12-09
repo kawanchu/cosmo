@@ -29,6 +29,7 @@
     "markdown-it-task-lists": "^2.1.1",
     "mavon-editor": "^2.6.17",
     "moment": "^2.22.2",
+    "ontology-dapi": "^0.4.6",
     "uuid": "^3.3.2",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",

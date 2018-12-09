@@ -62,8 +62,9 @@ export class Collection {
 import axiosBase from 'axios';
 
 export class Client {
-  constructor (host, port) {
+  constructor (host, port, opts = {}) {
     this.baseURL = `http://${host}:${port}`
+    this.sessionToken = opts.sessionToken || '';
   }
 
   axios () {
@@ -71,7 +72,7 @@ export class Client {
       baseURL: this.baseURL,
       headers: {
         'Content-Type': 'application/json',
-        'Ontology-Subject': 'AecaeSEBkt5GcBCxwz1F41TvdjX3dnKBkJ',
+        'Session-Token': this.sessionToken,
       },
       responseType: 'json',
     })
