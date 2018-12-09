@@ -11,7 +11,8 @@
   margin: 0;
 }
 .post-body {
-  font-size: 1.1rem;
+  font-size: .9rem;
+  padding-bottom: 100px;
 
   p {
     margin: 1rem 0;
@@ -29,10 +30,12 @@ table {
   }
 }
 pre {
-  background: #1E1E1E;
-  color: #fff;
-  padding: 10px;
-  overflow: scroll;
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f6f8fa;
+  border-radius: 3px;
 }
 </style>
 
@@ -47,7 +50,7 @@ pre {
         <h1 class='post-title'>{{ post.title }}</h1>
         <p class="created-at">{{ moment(post.createdAt).format('lll') }}</p>
       </div>
-      <div class="post-body" v-html='postBody'>
+      <div class="post-body markdown-body" v-html='postBody'>
       </div>
     </div>
   </div>
