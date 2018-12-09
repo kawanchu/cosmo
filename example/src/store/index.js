@@ -96,22 +96,21 @@ const createStore = () => {
         const posts = await db.collection('posts').get()
         commit('setPosts', posts)
       },
-      createPost({ commit, dispatch }) {
+      async createPost({ commit, dispatch }) {
         const d = new Date()
-        const post = {
+        const params = {
           title: this.state.postForm.title,
           body: this.state.postForm.body,
           createdAt: d.toISOString(),
           updatedAt: d.toISOString(),
         }
+        const post = await db.collection('posts').add(params)
         commit('addPost', post)
-        db.collection('posts').add(post)
-
         return post
       },
       deletePost({ commit, dispatch }, { post }) {
         commit('deletePost', post)
-        db.collection('posts').delete()
+        db.collection('posts').doc(post.id).delete()
       },
       updatePost({ commit, dispatch }, post) {
         const d = new Date()

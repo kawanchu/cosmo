@@ -1,3 +1,17 @@
+<style lang='scss'>
+.post-title {
+  font-size: 2.2rem;
+  margin: 2rem 0 0;
+}
+.created-at {
+  font-size: .8rem;
+  margin: 0;
+}
+.post-body {
+  font-size: 1.2rem;
+}
+</style>
+
 <template>
   <div class="posts-show">
     <div class="container">

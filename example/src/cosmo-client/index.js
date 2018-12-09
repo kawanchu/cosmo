@@ -41,6 +41,7 @@ export class Collection {
   async get () {
     try {
       const res = await this.client.get(`/${this.dataset}`)
+      console.info(`fetched ${this.dataset} from Cosmo`)
       return res.data
     } catch (e) {
       console.error(e)
@@ -50,6 +51,7 @@ export class Collection {
   async add (obj) {
     try {
       const res = await this.client.post(`/${this.dataset}`, obj)
+      console.info(`added ${this.dataset} to Cosmo`)
       return res.data
     } catch (e) {
       console.error(e)
