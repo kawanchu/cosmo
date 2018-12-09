@@ -23,8 +23,8 @@
   <div class="container">
     <div class="header">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/posts' }">記事一覧</el-breadcrumb-item>
-        <el-breadcrumb-item>新規作成</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/posts' }">Post list</el-breadcrumb-item>
+        <el-breadcrumb-item>New post</el-breadcrumb-item>
       </el-breadcrumb>
       <h1>New Post</h1>
     </div>
@@ -36,7 +36,7 @@
           </el-form-item>
         </el-form>
         <div class="header-control">
-          <el-button primary @click="createPost" type='primary'>保存</el-button>
+          <el-button primary @click="createPost" type='primary'>Save</el-button>
         </div>
       </div>
       <mavon-editor v-model='body' language='en'></mavon-editor>

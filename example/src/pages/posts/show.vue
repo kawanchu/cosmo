@@ -29,7 +29,7 @@ table {
   }
 }
 pre {
-  background: #364549;
+  background: #1E1E1E;
   color: #fff;
   padding: 10px;
   overflow: scroll;
@@ -55,13 +55,9 @@ pre {
 
 <script>
 import markdownIt from '../../plugins//markdown-it'
-import hljs from '../../plugins/hljs'
 import moment from 'moment'
 
 export default {
-  mounted() {
-    window.hljs = hljs
-  },
   computed: {
     post() {
       const id = this.$route.params.id

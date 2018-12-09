@@ -73,7 +73,7 @@ body {
           <div class="header-guest" v-else>
             <h1 class='title'>Monolith</h1>
             <div class="right-menu">
-              <el-button type='primary' @click="signIn()">ログイン</el-button>
+              <el-button type='primary' @click="signIn()">Sign in</el-button>
             </div>
           </div>
         </div>

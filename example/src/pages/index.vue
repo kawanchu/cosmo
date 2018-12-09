@@ -18,8 +18,8 @@
   <div class="pages-index">
     <div class="container">
       <div class="hero">
-        <h1 class='main-text'>たいせつなデータを自分の手元に</h1>
-        <p class='description'>重要なデータをクラウドに預けず自分で管理できる情報管理ツール</p>
+        <h1 class='main-text'>Store your secure, private data <br/> onto secure storage you choosen</h1>
+        <p class='description'>Monolith is a markdown memo app that stores user's data onto user's storage directly.</p>
       </div>
     </div>
   </div>

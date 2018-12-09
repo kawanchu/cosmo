@@ -47,9 +47,9 @@
   <div class="pages-posts-index">
     <div class="container">
       <div class="post-list-header">
-        <h1>記事一覧</h1>
+        <h1>Post list</h1>
         <div class="list-control">
-          <el-button @click="$router.push('/posts/new')" type='primary'>作成</el-button>
+          <el-button @click="$router.push('/posts/new')" type='primary'>Add</el-button>
         </div>
       </div>
       <div class="posts">
