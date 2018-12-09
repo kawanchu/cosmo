@@ -73,8 +73,19 @@
 export default {
   computed: {
     posts() {
-      return this.$store.getters.recentPosts
-    }
+      let items = [];
+      try {
+        items = this.$store.getters.recentPosts
+        console.log('no error');
+      } catch (e) {
+        console.warn('got error');
+      }
+      return items;
+    },
+    authError() {
+      console.log(this.$store.getters.authError);
+      return this.$store.getters.authError
+    },
   },
   methods: {
     deletePost(post) {
@@ -83,7 +94,17 @@ export default {
     editPost(post) {
       this.$router.push(`/posts/${post.id}/edit`)
     }
-  }
+  },
+  watch: {
+    authError(val) {
+      if (!val) return;
+
+      this.$notify.error({
+        title: 'Error',
+        message: "You don't have permission",
+      });
+    },
+  },
 }
 </script>
 

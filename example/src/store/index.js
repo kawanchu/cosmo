@@ -38,6 +38,7 @@ const createStore = () => {
         person: null,
       },
       posts: [],
+      authError: null,
     },
     getters: {
       isAuthenticated(state) {
@@ -50,6 +51,8 @@ const createStore = () => {
         return state.posts.find(post => post.id === id)
       },
       recentPosts(state) {
+        if (state.authError) return [];
+
         return state.posts.sort((p1, p2) => {
           const a = p1.createdAt
           const b = p2.createdAt
@@ -57,6 +60,9 @@ const createStore = () => {
           if (a > b) return -1
           return 0
         })
+      },
+      authError(state) {
+        return state.authError
       }
     },
     mutations: {
@@ -82,7 +88,10 @@ const createStore = () => {
       deletePost(state, post) {
         const idx = state.posts.findIndex(p => p.id === post.id)
         state.posts.splice(idx, 1)
-      }
+      },
+      setAuthError(state, e) {
+        state.authError = e;
+      },
     },
     actions: {
       init({ commit, dispatch }) {
@@ -114,8 +123,12 @@ const createStore = () => {
         window.localStorage.removeItem(sessionTokenKey);
       },
       async loadPosts({ commit }) {
-        const posts = await db().collection('posts').get()
-        commit('setPosts', posts)
+        try {
+          const posts = await db().collection('posts').get()
+          commit('setPosts', posts)
+        } catch (e) {
+          commit('setAuthError', e);
+        }
       },
       async createPost({ commit, dispatch }) {
         const d = new Date()

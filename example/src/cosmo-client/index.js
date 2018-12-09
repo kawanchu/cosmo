@@ -11,6 +11,7 @@ export class Doc {
       return res.data
     } catch (e) {
       console.error(e)
+      throw e
     }
   }
 
@@ -20,6 +21,7 @@ export class Doc {
       return res.data
     } catch (e) {
       console.error(e)
+      throw e
     }
   }
 
@@ -45,6 +47,7 @@ export class Collection {
       return res.data
     } catch (e) {
       console.error(e)
+      throw e
     }
   }
 
@@ -55,6 +58,7 @@ export class Collection {
       return res.data
     } catch (e) {
       console.error(e)
+      throw e
     }
   }
 }

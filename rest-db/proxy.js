@@ -1,6 +1,6 @@
 const commander = require('commander');
 const http = require('http');
-const { Claim, Crypto } = require('ontology-ts-sdk');
+const { Claim, Crypto, utils } = require('ontology-ts-sdk');
 
 commander
   .version('0.0.1')
@@ -28,15 +28,55 @@ if (!claimIssuer || !ontApiOrigin) {
 }
 
 async function hasPermission(req, iss) {
-  const sub = req.headers['session-token'];
+  const token = req.headers['session-token'];
+  if (!token) {
+    console.log('missing session token');
+    return false;
+  }
+
+  const [account, _publicKey, _signature] = token.split(':');
+  if (!account || !_publicKey || !_signature) {
+    console.log('incomplete session token');
+    return false;
+  }
+
+  let publicKey;
+  let ontid;
+  try {
+    publicKey = Crypto.PublicKey.deserializeHex(new utils.StringReader(_publicKey))
+    ontid = Crypto.Address.generateOntid(publicKey);
+  } catch (e) {
+    console.log('failed to decode public key');
+    return false;
+  }
+
+  if (ontid !== `did:ont:${account}`) {
+    console.log('address and public key does not match');
+    return false;
+  }
+
+  let signature;
+  try {
+    signature = Crypto.Signature.deserializeHex(_signature);
+  } catch (e) {
+    console.log('failed to decode signature');
+    return false;
+  }
+
+  const msg = utils.str2hexstr(account);
+  const verified = publicKey.verify(msg, signature);
+  if (!verified) {
+    console.log('failed to verify signature');
+    return false;
+  }
+
   const issuer = `did:ont:${iss}`;
-  const subject = `did:ont:${sub}`;
-  const signature = null;
+  const subject = `did:ont:${account}`;
   const useProof = false;
   const claim = new Claim({
     issuer,
     messageId: `${issuer}_${subject}`,
-  }, signature, useProof);
+  }, null, useProof);
   
   try {
     const res = await claim.getStatus(ontApiOrigin);
