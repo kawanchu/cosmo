@@ -1,4 +1,7 @@
 <style lang='scss'>
+.post-header {
+  margin: 0 0 3rem;
+}
 .post-title {
   font-size: 2.2rem;
   margin: 2rem 0 0;
@@ -8,7 +11,28 @@
   margin: 0;
 }
 .post-body {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
+
+  p {
+    margin: 1rem 0;
+  }
+}
+table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+
+  th,td {
+    overflow: scroll;
+    border: 1px solid #eee;
+    padding: 5px 10px;
+  }
+}
+pre {
+  background: #364549;
+  color: #fff;
+  padding: 10px;
+  overflow: scroll;
 }
 </style>
 

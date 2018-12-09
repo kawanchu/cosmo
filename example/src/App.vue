@@ -19,6 +19,12 @@ body {
   display: flex;
   justify-content: space-between;
   padding: 1rem 0;
+  .title {
+    a {
+      color: #444;
+      text-decoration: none;
+    }
+  }
 
   .right-menu {
     display: flex;
@@ -56,7 +62,9 @@ body {
       <el-header class='header' height='auto'>
         <div class="container">
           <div class="header-signin" v-if='this.$store.getters.isAuthenticated'>
-            <h1 class='title'>Monolith</h1>
+            <h1 class='title'>
+              <a href="/">Monolith</a>
+            </h1>
             <div class="right-menu">
               <img class='avatar' :src='$store.getters.authUser.imageUrl' alt="avatar" :width='40' :height='40'>
               <a class='signout' href="#" @click="signOut()">sign out</a>

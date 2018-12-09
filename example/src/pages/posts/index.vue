@@ -17,8 +17,26 @@
   justify-content: space-between;
 
   .post-box {
+    width: calc(100% - 110px);
     h1 {
       margin: 0;
+      a {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: 100%;
+        word-break: break-all;
+        color: #4d4d4d;
+        text-decoration: none;
+        display: inline-block;
+        &:visited {
+          color: #888888;
+        }
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
   }
 }
