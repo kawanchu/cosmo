@@ -1,12 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
+import { db } from '../cosmo-client'
 
-import { getPosts, putPosts } from './db';
-
-const blockstack = require('blockstack')
 const uuidv4 = require('uuid/v4');
-const POSTS_FILE = 'posts.json'
 
 const createStore = () => {
   return new Vuex.Store({
@@ -96,8 +93,7 @@ const createStore = () => {
         blockstack.signUserOut(window.location.href)
       },
       async loadPosts({ commit }) {
-        const posts = await getPosts();
-        console.log(posts);
+        const posts = await db.collection('posts').get()
         commit('setPosts', posts)
       },
       createPost({ commit, dispatch }) {
@@ -105,28 +101,24 @@ const createStore = () => {
         const post = {
           title: this.state.postForm.title,
           body: this.state.postForm.body,
-          id: uuidv4(),
           createdAt: d.toISOString(),
           updatedAt: d.toISOString(),
         }
         commit('addPost', post)
-        dispatch('syncPosts')
+        db.collection('posts').add(post)
 
         return post
       },
       deletePost({ commit, dispatch }, { post }) {
         commit('deletePost', post)
-        dispatch('syncPosts')
-      },
-      syncPosts({ commit }) {
-        putPosts(this.state.posts);
+        db.collection('posts').delete()
       },
       updatePost({ commit, dispatch }, post) {
         const d = new Date()
         post.createdAt = d.toISOString()
 
         commit('updatePost', post)
-        dispatch('syncPosts')
+        db.collection('posts').doc(post.id).set(post)
       }
     }
   })
