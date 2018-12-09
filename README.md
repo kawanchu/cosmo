@@ -15,7 +15,7 @@ cd rest-db
 node proxy.js --proxy-host localhost --proxy-port 21983
 
 # 3rd tab
-cd memo-app
+cd example
 npm install
 npm start
 ```
